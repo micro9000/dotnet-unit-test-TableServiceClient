@@ -90,6 +90,10 @@ public static class FeatureActivationServiceProvider
                 }
             }
 
+            // Important:
+            // You need to create mock instance of TableClient class for each of your table entity
+            // and register them in the mock instance of the TableServiceClient class
+
             // ValidStores table client setup
             RegisterTableClientForEntity(validStores,
                 StoreActivationConstants.TableStorage.ValidStores,
@@ -141,10 +145,13 @@ public static class FeatureActivationServiceProvider
         return services;
     }
 
-    // TODO: Extract this into a separate class to enable reuse across multiple unit tests
+
     private static void RegisterTableClientForEntity<tableEntity>(
         List<tableEntity> inMemoryTable, string tableName, Mock<TableServiceClient>? mockTableServiceClient) where tableEntity : class, ITableEntity, new ()
     {
+        // Important: 
+        // We need to mock all the required methods of the TableClient class
+        
         var mockTableClient = new Mock<TableClient>();
         mockTableClient.Setup(m => m.Name).Returns(tableName);
 
